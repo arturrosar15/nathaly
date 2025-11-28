@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Surpresa Especial 💛</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #ffe6f2, #ffd9ec);
+            font-family: 'Trebuchet MS', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            padding-top: 40px;
+            overflow-x: hidden;
+        }
+
+        h1 {
+            color: #ff4f9d;
+            margin-bottom: 20px;
+            font-size: 28px;
+            text-shadow: 0 0 8px #ff97c9;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {opacity: 1;}
+            50% {opacity: 0.6;}
+            100% {opacity: 1;}
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(10, 60px);
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .box {
+            width: 60px;
+            height: 60px;
+            background: #ff9ecb;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: transparent;
+            font-size: 24px;
+            cursor: pointer;
+            transition: 0.25s;
+        }
+
+        .box:hover {
+            transform: scale(1.07);
+            background: #ffb3d9;
+        }
+
+        .box.revealed {
+            background: #ffffff;
+            color: #ff3f8f;
+            font-weight: bold;
+            box-shadow: 0px 0px 14px #ff7abb;
+            transform: scale(1.12) rotate(3deg);
+        }
+
+        /* Popup melhorado */
+        .popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.6);
+            background: #fff;
+            padding: 25px;
+            border-radius: 16px;
+            text-align: center;
+            width: 320px;
+            display: none;
+            box-shadow: 0px 0px 25px rgba(255, 0, 128, 0.35);
+            animation: pop 0.4s forwards;
+        }
+
+        @keyframes pop {
+            to {transform: translate(-50%, -50%) scale(1);}
+        }
+
+        .name-options button {
+            display: block;
+            width: 100%;
+            margin-top: 12px;
+            padding: 11px;
+            background: #ffe0f1;
+            color: #ff2d85;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            font-size: 17px;
+            transition: .25s;
+        }
+
+        .name-options button:hover {
+            background: #ffb8da;
+            transform: scale(1.05);
+        }
+
+        #tryAgainMessage {
+            margin-top: 10px;
+            color: #ff2d85;
+            font-size: 16px;
+            display: none;
+        }
+
+        #finalMessage {
+            font-size: 22px;
+            color: #ff2d85;
+            margin-top: 25px;
+            display: none;
+            text-shadow: 0 0 8px #ffa6d6;
+        }
+
+        /* Animação de corações */
+        .heart {
+            position: fixed;
+            top: -10px;
+            font-size: 20px;
+            animation: fall linear forwards;
+        }
+
+        @keyframes fall {
+            0% {transform: translateY(-20px); opacity: 1;}
+            100% {transform: translateY(110vh); opacity: 0;}
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Clique nos quadradinhos 💛</h1>
+
+    <div class="grid" id="grid"></div>
+
+    <div id="popup" class="popup">
+        <h2>Quem será que fez esse site? 😳</h2>
+
+        <div class="name-options">
+            <button onclick="checkAnswer('artur')">Artur</button>
+            <button onclick="checkAnswer('guilherme')">Guilherme</button>
+            <button onclick="checkAnswer('pedro')">Pedro</button>
+        </div>
+
+        <div id="tryAgainMessage"></div>
+    </div>
+
+    <div id="finalMessage"></div>
+
+<script>
+    const phrase = "VOCÊ É INCRÍVEL 💛";
+    const grid = document.getElementById("grid");
+    let revealedLetters = 0;
+
+    function createHearts() {
+        let heart = document.createElement("div");
+        heart.classList.add("heart");
+        heart.textContent = "💖";
+        heart.style.left = Math.random() * 100 + "vw";
+        heart.style.animationDuration = (3 + Math.random() * 2) + "s";
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 5000);
+    }
+
+    setInterval(createHearts, 800);
+
+    phrase.split("").forEach((char) => {
+        const box = document.createElement("div");
+        box.classList.add("box");
+        box.dataset.letter = char === " " ? "" : char;
+
+        box.addEventListener("click", () => {
+            if (!box.classList.contains("revealed")) {
+                box.classList.add("revealed");
+                box.textContent = box.dataset.letter;
+                if (box.dataset.letter !== "") revealedLetters++;
+
+                if (revealedLetters === phrase.replace(/ /g, "").length) {
+                    setTimeout(() => {
+                        document.getElementById("popup").style.display = "block";
+                    }, 600);
+                }
+            }
+        });
+
+        grid.appendChild(box);
+    });
+
+    function checkAnswer(name) {
+        const tryMsg = document.getElementById("tryAgainMessage");
+        const finalMsg = document.getElementById("finalMessage");
+
+        if (name === "artur") {
+            finalMsg.style.display = "block";
+            finalMsg.innerHTML = "💖 Acertoooou! Eu fiz isso especialmente pra você... 💛";
+            document.getElementById("popup").style.display = "none";
+        } else {
+            tryMsg.style.display = "block";
+            tryMsg.textContent = "😆 Tenta de novo!";
+            tryMsg.style.animation = "shake 0.3s";
+            setTimeout(() => tryMsg.style.animation = "", 300);
+        }
+    }
+</script>
+
+</body>
+</html>
